@@ -28,7 +28,8 @@ namespace StudentManagement.Controllers
         public async Task<IActionResult> GetAll()
         {
             var studentList = await studentRepository.GetAllAsync();
-            return Ok(mapper.Map<List<Student>>(studentList));
+            
+            return Ok(mapper.Map<List<StudentDto>>(studentList));
         }
         #endregion
 
@@ -81,7 +82,7 @@ namespace StudentManagement.Controllers
             {
                 return NotFound();
             }
-            return Ok(mapper.Map<Student>(personDomainModel));
+            return Ok(mapper.Map<StudentDto>(personDomainModel));
         }
         #endregion
     }

@@ -23,7 +23,7 @@ namespace StudentManagement.Repositories
 
         public async Task<Student?> DeleteAsync(int id)
         {
-            var existingStudent = await dbContext.Students.FirstOrDefaultAsync(s => s.Id == id);
+            var existingStudent = await dbContext.Students.Include(a=>a.Address).Include(d=>d.Department).FirstOrDefaultAsync(s => s.Id == id);
             if(existingStudent == null)
             {
                 return null;
@@ -34,13 +34,13 @@ namespace StudentManagement.Repositories
         }
 
         public async Task<List<Student>> GetAllAsync()
-        {
-            return await dbContext.Students.ToListAsync();
+        { 
+            return await dbContext.Students.Include(a=>a.Address).Include(d=>d.Department).ToListAsync();
         }
 
         public async Task<Student?> GetByIdAsync(int id)
         {
-            return await dbContext.Students.FirstOrDefaultAsync(s => s.Id == id);
+            return await dbContext.Students.Include(a=>a.Address).Include(d=>d.Department).FirstOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task<Student?> UpdateAsync(int id, Student student)
