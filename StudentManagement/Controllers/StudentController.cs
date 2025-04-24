@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace StudentManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class StudentController : ControllerBase
     {
         private readonly StudentManagementDbContext dbContext;
@@ -25,6 +27,7 @@ namespace StudentManagement.Controllers
         }
         #region GetAll Students
         [HttpGet]
+        [Authorize(Roles ="Reader,Writer")]
         public async Task<IActionResult> GetAll()
         {
             var studentList = await studentRepository.GetAllAsync();
@@ -36,6 +39,8 @@ namespace StudentManagement.Controllers
         #region Get Student By ID
         [HttpGet]
         [Route("{id:int}")]
+        [Authorize(Roles = "Reader,Writer")]
+
         public async Task<IActionResult> GetById([FromRoute]int id)
         {
             var studentDomainModel = await studentRepository.GetByIdAsync(id);
@@ -49,6 +54,7 @@ namespace StudentManagement.Controllers
 
         #region Create Student
         [HttpPost]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Create([FromBody]AddStudentRequestDto addStudentRequestDto)
         {
             var studentDomainModel = mapper.Map<Student>(addStudentRequestDto);
@@ -60,6 +66,7 @@ namespace StudentManagement.Controllers
         #region Update Student
         [HttpPut]
         [Route("{id:int}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute]int id, [FromBody]UpdateStudentRequestDto updateStudentRequestDto)
         {
             var studentDomainModel = mapper.Map<Student>(updateStudentRequestDto);
@@ -75,6 +82,7 @@ namespace StudentManagement.Controllers
         #region Delete Student
         [HttpDelete]
         [Route("{id:int}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Delete([FromRoute]int id)
         {
             var personDomainModel = await studentRepository.DeleteAsync(id);
